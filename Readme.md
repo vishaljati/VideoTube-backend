@@ -2,4 +2,4 @@
 Hii ! Im learning backend from chai aur code channel .
 While learning backend concept , I am making a project named "VideoTube"
 
-[Github Repo Link]: (https://github.com/vishaljati/VideoTube-backend.git)
+[Github Repo Link]: https://github.com/vishaljati/VideoTube-backend.git
