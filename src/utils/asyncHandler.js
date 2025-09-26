@@ -1,7 +1,6 @@
 
 // Creating a utils for error handilng of upcoming function
 
-import { Promise } from "mongoose"
 
  // Method 1
 
@@ -24,3 +23,5 @@ import { Promise } from "mongoose"
          .catch((error)=>next(error))
      }
  }
+
+ export { asyncHandler }

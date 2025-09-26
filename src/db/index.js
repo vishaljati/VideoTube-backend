@@ -15,4 +15,4 @@ import {DB_NAME} from "../constant.js";
     
  }
 
- export default connectDB;
+ export { connectDB };

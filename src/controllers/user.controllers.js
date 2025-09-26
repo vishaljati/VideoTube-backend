@@ -24,12 +24,12 @@ const registerUser = asyncHandler(async (req, res) => {
         [username, fullName, email, password].some((field) =>
             field?.trim === "")
     ) {
-        throw new ApiError(400, "All fields are required");
-    }
+        throw new ApiError(400 , "All fields are required");
+     }
 
     // Checking existed user in db
 
-    const existedUser = User.findOne({
+    const existedUser = await User.findOne({
         $or: [{ username }, { email }]
     })
     if (existedUser) {
@@ -40,22 +40,21 @@ const registerUser = asyncHandler(async (req, res) => {
     check either username , or email */
 
     // Checking images
-
-    const avatarLocalPath = req.file?.avatar[0]?.path;
-    const coverImageLocalPath = req.file?.coverImage[0]?.path;
+  const avatarLocalPath = req.files?.avatar?.[0]?.path;
+  const coverImageLocalPath = req.files?.coverImage?.[0]?.path;
     /* Note : req.body provides all data , multer provides req.files
     we check 1st prop of avatar->link and asking multer for local path */
 
 
     if (!avatarLocalPath) {
-        throw new ApiErrorError(400, "Avatar is required");
+        throw new ApiError(401, "Avatar is required");
 
     }
     const avatar = await uploadCloudinary(avatarLocalPath)
     const coverImage = await uploadCloudinary(coverImageLocalPath)
 
     if (!avatar) {
-        throw new ApiErrorError(400, "Avatar is required");
+        throw new ApiError(401, "Avatar is required");
     }
 
     // User creation in DB
@@ -69,7 +68,7 @@ const registerUser = asyncHandler(async (req, res) => {
     })
     // Checking if user created or not
 
-    const createdUser = User.findById(user._id).select(
+    const createdUser = await User.findById(user._id).select(
         "-password -refreshTokens"
     )
     if (!createdUser) {
@@ -79,7 +78,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // Sending response to frontend
 
-    res.status(201).json(
+    return res.status(201).json(
         new ApiResponse(200, createdUser, "User registered successfully")
     )
 
