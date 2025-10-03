@@ -209,7 +209,7 @@ const logOutUser = asyncHandler(async (req, res) => {
 
  const refreshAccessToken= asyncHandler (async (req,res) => {
        
-       const cookies = req.cookies || {}
+       const cookies = req.cookies || {}   // cookies not cookie
        const body = req.body || {}
        console.log(cookies);
        
@@ -217,7 +217,7 @@ const logOutUser = asyncHandler(async (req, res) => {
       cookies.refreshToken || body.refreshToken;
                                      
        console.log("Incoming refresh token:", incomingRefreshToken);
-                  // cookies not cookie
+                 
           if (!incomingRefreshToken || typeof incomingRefreshToken !== "string" || !incomingRefreshToken.trim()) {
         throw new ApiError(401, "Unauthorized request: Refresh token missing or invalid");
     }
