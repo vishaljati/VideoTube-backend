@@ -21,6 +21,13 @@ export const verifyJWT = asyncHandler (async (req , _ , next)=>{
        If the token is valid, jwt.verify returns the decoded payload 
        (user info, etc.) and assigns it to decodedToken.
        If the token is invalid or expired, it throws an error.*/
+
+       
+      if (!decodedToken) {
+          
+          throw new ApiError(401,"Invalid Access Token");
+          
+      }
   
       const user= await User.findById(decodedToken?._id)
                   .select("-password -refreshTokens") 

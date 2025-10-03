@@ -13,8 +13,9 @@ const generateAccessAndRefreshTokens = async (userId) => {
         const AccessToken = user.generateAccessToken()
         const RefreshToken = user.generateRefreshToken()
 
-        user.refreshToken = RefreshToken // save refresh token in db
-
+        user.refreshTokens = RefreshToken // save refresh token in db
+       
+        
         await user.save({ validateBeforeSave: false })
 
         return { AccessToken, RefreshToken }
@@ -179,7 +180,7 @@ const logOutUser = asyncHandler(async (req, res) => {
         req.user._id,
         {
             $set: {
-                refreshToken : undefined
+                refreshTokens : undefined
             }
         },
         {
