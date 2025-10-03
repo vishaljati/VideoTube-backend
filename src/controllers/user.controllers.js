@@ -207,8 +207,8 @@ const logOutUser = asyncHandler(async (req, res) => {
 
  const refreshAccessToken= asyncHandler (async (req,res) => {
      
-       const incomingRefreshToken = req.cookie.refreshToken || req.body.refreshToken
-
+       const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
+                  // cookies not cookie
        if (!incomingRefreshToken) {
            throw new ApiError(401, "Unauthorised request");
            
@@ -329,7 +329,7 @@ const updateAccountDetails = asyncHandler(async(req,res)=>{
 
 })
 
-const updateUserAvatar = asyncHandler(async(req,res)=>{
+const updateUserAvatar = asyncHandler (async(req,res)=>{
     const avatarLocalPath = req.file?.path // single file is needed so used file 
     if (!avatarLocalPath) {
         throw new ApiError(400,"Avatar file is missing");
@@ -361,7 +361,7 @@ const updateUserAvatar = asyncHandler(async(req,res)=>{
 
 })
 
-const updateUserCoverImage = asyncHandler(async(req,res)=>{
+const updateUserCoverImage = asyncHandler (async(req,res)=>{
     const coverImageLocalPath = req.file?.path // single file is needed so used file 
     if (!coverImageLocalPath) {
         throw new ApiError(400,"Cover Image file is missing");
