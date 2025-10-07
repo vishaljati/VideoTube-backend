@@ -4,11 +4,7 @@ import mongooseAggregatePaginate from
 
 const videoSchema = new Schema (
     {
-        videoID :{
-             type : String,
-             unique : true,
-             required : true
-        },
+       
         videoFile :{
              type: String, //cloudinary url
              required: true

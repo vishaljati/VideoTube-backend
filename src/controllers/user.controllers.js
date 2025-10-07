@@ -350,6 +350,7 @@ const updateAccountDetails = asyncHandler(async(req,res)=>{
 })
 
 const updateUserAvatar = asyncHandler (async(req,res)=>{
+
     const avatarLocalPath = req.file?.path // single file is needed so used file 
     if (!avatarLocalPath) {
         throw new ApiError(400,"Avatar file is missing");
@@ -370,7 +371,7 @@ const updateUserAvatar = asyncHandler (async(req,res)=>{
               }
          },
          {new : true}
-    ).select("-password")
+    ).select("-password -refreshTokens")
   
     return res
     .status(200)
@@ -402,7 +403,7 @@ const updateUserCoverImage = asyncHandler (async(req,res)=>{
               }
          },
          {new : true}
-    ).select("-password")
+    ).select("-password -refreshTokens")
   
     return res
     .status(200)
@@ -482,7 +483,9 @@ const getUserChannelProfile = asyncHandler(async (req,res) => {
 
 
     ])
-    console.log(channel); // check 
+    // console.log("CHANNEL:",channel); 
+    /*Note: Channel is an array [{user details}]  ,
+     to access details , channel[0]._id , channel[0].username etc */
 
     if (!channel?.length) {
         throw new ApiError(404,"Channel is not exist");
@@ -513,7 +516,7 @@ const getUserChannelProfile = asyncHandler(async (req,res) => {
             $lookup:{
                 from:"videos",
                 localField:"watchHistory",
-                foreignField: "videoID",
+                foreignField: "_id",
                 as:"watchHistory",
                 pipeline:[
                     {
