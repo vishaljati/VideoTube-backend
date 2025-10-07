@@ -282,6 +282,10 @@ const changeCurrentPassword = asyncHandler (async (req ,res)=>{
       throw new ApiError(400,"Given Password is incorrect");
       
    }
+   if (oldPassword===newPassword) {
+     throw new ApiError(400,"Old password and new password can't be same");
+     
+   }
 
    user.password = newPassword
    await user.save({validateBeforeSave:false})
