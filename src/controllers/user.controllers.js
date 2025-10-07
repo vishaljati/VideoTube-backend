@@ -283,7 +283,7 @@ const changeCurrentPassword = asyncHandler (async (req ,res)=>{
       
    }
    if (oldPassword===newPassword) {
-     throw new ApiError(400,"Old password and new password can't be same");
+     throw new ApiError(400,"Old password and new password must not be same");
      
    }
 
@@ -300,18 +300,24 @@ const changeCurrentPassword = asyncHandler (async (req ,res)=>{
 })
 
 const getCurrentUser = asyncHandler (async (req,res)=>{
+
 const user = req.user
- return res.status(200).json( new ApiResponse(
-     200,
-     {user},
-     "Current user fetched successfully"
- ))
+ return res
+       .status(200)
+       .json( 
+          new ApiResponse(
+                200,
+                {user},
+                "Current user fetched successfully"
+       ))
 
 })
 
 const updateAccountDetails = asyncHandler(async(req,res)=>{
-    const {fullName , email } = req.body
-    if (!fullName || !email) {
+
+    const { fullName , email } = req.body
+
+    if (!( fullName|| email ) ) {
         throw new ApiError(401,"Full Name or Email is required");
         
     }
