@@ -1,12 +1,10 @@
-import express from "express";
+
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/users.model.js";
-import { upload } from "../middlewares/multer.middlewares.js";
 import { uploadCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
-import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 
 
@@ -108,7 +106,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // Sending response to frontend
 
-    return res.status(201).json(
+    return res.status(200).json(
         new ApiResponse(200, createdUser, "User registered successfully")
     )
 
@@ -141,9 +139,10 @@ const loginUser = asyncHandler(async (req, res) => {
     // checking password
 
     const isPasswordValid = await user.isPasswordCorrect(password)
-    /* User is given by mongoose , any checking
-    or methods on db is done by User . But in
-        my codebase user is used for checking */
+    /* User is  mongoose model , any checking
+    or methods like db operations is done by User .
+     But to check any defined  methods in my codebase
+      user is used for checking. user is a single user instance */
 
     if (!isPasswordValid) {
         throw new ApiError(401, "Password incorrect");
@@ -212,12 +211,12 @@ const logOutUser = asyncHandler(async (req, res) => {
        
        const cookies = req.cookies || {}   // cookies not cookie
        const body = req.body || {}
-       console.log(cookies);
+    //    console.log(cookies);
        
       const incomingRefreshToken = 
       cookies.refreshToken || body.refreshToken;
                                      
-       console.log("Incoming refresh token:", incomingRefreshToken);
+    //    console.log("Incoming refresh token:", incomingRefreshToken);
                  
           if (!incomingRefreshToken || typeof incomingRefreshToken !== "string" || !incomingRefreshToken.trim()) {
         throw new ApiError(401, "Unauthorized request: Refresh token missing or invalid");
