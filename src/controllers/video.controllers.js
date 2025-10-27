@@ -7,7 +7,7 @@ import { User } from "../models/users.model"
 import { uploadCloudinary, deleteCloudinary } from "../utils/cloudinary";
 
 
-//Due: Add owner in db
+
 const getAllVideos = asyncHandler(async (req, res) => {
     // get all video based on query , sortby ,sortType , pagination
 
