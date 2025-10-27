@@ -6,6 +6,8 @@ import { ApiResponse } from "../utils/ApiResponse";
 import { User } from "../models/users.model"
 import { uploadCloudinary, deleteCloudinary } from "../utils/cloudinary";
 
+
+//Due: Add owner in db
 const getAllVideos = asyncHandler(async (req, res) => {
     // get all video based on query , sortby ,sortType , pagination
 
@@ -59,6 +61,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
 
 const publishAVideo = asyncHandler(async (req, res) => {
+
     const { title, description } = req.body
     // TODO: get video, upload to cloudinary, create video
 
@@ -84,6 +87,8 @@ const publishAVideo = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Something went wrong while uploading thumbnail on cloudinary");
 
     }
+    const ownerId = req.user._id
+
 
     const video = await Video.create({
         videoFile: cloudinaryResponseVideo.url,
@@ -91,7 +96,8 @@ const publishAVideo = asyncHandler(async (req, res) => {
         title: title,
         description: description,
         thumbnailPublicId: cloudinaryResponseThumbnail.public_id,
-        videoPublicId: cloudinaryResponseVideo.public_id
+        videoPublicId: cloudinaryResponseVideo.public_id,
+        owner:ownerId
 
     })
 
