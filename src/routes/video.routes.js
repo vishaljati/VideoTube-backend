@@ -5,7 +5,8 @@ import {
     getVideoById,
     updateVideo,
     deleteVideo,
-    togglePublishStatus
+    togglePublishStatus,
+    addVideoView
 } from "../controllers/video.controllers.js"
 
 import {verifyJWT} from "../middlewares/auth.middlewares.js"
