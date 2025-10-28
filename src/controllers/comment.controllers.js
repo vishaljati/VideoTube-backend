@@ -138,7 +138,7 @@ const updateComment = asyncHandler(async (req, res) => {
 const deleteComment = asyncHandler(async (req, res) => {
     // TODO: delete a comment
     const { commentId } = req.params
-    if (!commentId || !isValidObjectId(commentId)) {
+    if (!isValidObjectId(commentId)) {
         throw new ApiError(401,"Comment not found");
         
     }

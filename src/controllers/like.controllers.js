@@ -5,15 +5,16 @@ import {ApiResponse} from "../utils/ApiResponse.js"
 import {asyncHandler} from "../utils/asyncHandler.js"
 
 const toggleVideoLike = asyncHandler(async (req, res) => {
-    const {videoId} = req.params
-    //TODO: toggle like on video
-    const {userId}= req.user._id
+try {
+      const {videoId} = req.params
+      //TODO: toggle like on video
+      const userId= req.user._id
 
     if (!isValidObjectId(videoId)) {
         throw new ApiError(404,"Video not found");
         
     }
-try {
+
         const existedLike = await Like.findOne({likedBy:userId,video:videoId})
         if(existedLike){
            await Like.deleteOne({_id:existedLike?._id})
@@ -23,7 +24,7 @@ try {
            return res.status(200).json(new ApiResponse(200,{ message: "Like Added",liked: true,},"Like Added"))
         }
 } catch (error) {
-    console.error("Error in toggleVideoLike:", error);
+    console.error("Error in toggleLike:", error);
     res.status(500).json({ success: false, message: "Server error while toggling like" });
     return null
   }
@@ -34,7 +35,7 @@ try {
 const toggleCommentLike = asyncHandler(async (req, res) => {
     const {commentId} = req.params
     //TODO: toggle like on comment
-    const {userId}= req.user._id
+    const userId= req.user._id
 
     if (!isValidObjectId(commentId)) {
         throw new ApiError(404,"Comment not found");
@@ -59,7 +60,7 @@ try {
 const toggleTweetLike = asyncHandler(async (req, res) => {
     const {tweetId} = req.params
     //TODO: toggle like on tweet
-        const {userId}= req.user._id
+        const userId= req.user._id
 
     if (!isValidObjectId(tweetId)) {
         throw new ApiError(404,"Comment not found");
@@ -84,9 +85,9 @@ try {
 
 const getLikedVideos = asyncHandler(async (req, res) => {
     //TODO: get all liked videos
-    const {userId}=req.user._id
+    const userId=req.user._id
     if (!userId) {
-        throw new ApiError(400,"User authentication invalid");
+        throw new ApiError(401,"User authentication invalid");
         
     }
    try {
@@ -103,8 +104,8 @@ const getLikedVideos = asyncHandler(async (req, res) => {
      if (likedVideos?.length===0) {
          return res.status(200).json(new ApiResponse(200,{},"No liked video found"))
      }
- 
      return res.status(200).json(new ApiResponse(200,{likedVideos, likeCount:likedVideos.length},"Liked video fetched successfully"))
+     
    } catch (error) {
        console.error("Error in Fetching liked video:", error);
        res.status(500).json({ success: false, message: "Server error while fetching liked videos" });
