@@ -116,6 +116,29 @@ const publishAVideo = asyncHandler(async (req, res) => {
 
 })
 
+const addVideoView = asyncHandler(async (req, res) => {
+  const { videoId } = req.params;
+
+  // Validate ID
+  if (!isValidObjectId(videoId)) {
+    throw new ApiError(400, "Invalid video ID");
+  }
+
+  // Find and increment view count atomically
+  const updatedVideo = await Video.findByIdAndUpdate(
+    videoId,
+    { $inc: { views: 1 } }, // increment by 1
+    { new: true }           // return updated document
+  );
+
+  if (!updatedVideo) {
+    throw new ApiError(404, "Video not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updatedVideo, "View count incremented"));
+});
 
 const getVideoById = asyncHandler(async (req, res) => {
     const { videoId } = req.params
@@ -288,6 +311,7 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
 export {
     getAllVideos,
     publishAVideo,
+    addVideoView,
     getVideoById,
     updateVideo,
     deleteVideo,

@@ -36,6 +36,8 @@ router.route("/:videoId")
         .delete(deleteVideo)
         .patch(upload.single("thumbnail"),updateVideo)
         
+router.route("/:videoId/view").put(addVideoView)
+        
 
 router.route("/toggle/publish/:videoId")
         .patch(togglePublishStatus)
