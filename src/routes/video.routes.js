@@ -7,10 +7,10 @@ import {
     updatethumbnail,
     deleteVideo,
     togglePublishStatus
-} from "../controllers/video.controllers"
+} from "../controllers/video.controllers.js"
 
-import {verifyJWT} from "../middlewares/auth.middlewares"
-import {upload} from "../middlewares/multer.middlewares"
+import {verifyJWT} from "../middlewares/auth.middlewares.js"
+import {upload} from "../middlewares/multer.middlewares.js"
 
 const router = Router();
 

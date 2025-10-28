@@ -1,5 +1,5 @@
-import {User} from "../models/users.model"
-import {Video} from "../models/videos.model"
+import {User} from "../models/users.model.js"
+
 
 
 const  getUserSubscriber = async (username) => {
