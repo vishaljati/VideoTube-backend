@@ -97,7 +97,8 @@ const publishAVideo = asyncHandler(async (req, res) => {
         description: description,
         thumbnailPublicId: cloudinaryResponseThumbnail.public_id,
         videoPublicId: cloudinaryResponseVideo.public_id,
-        owner:ownerId
+        owner:ownerId,
+        duration:cloudinaryResponseVideo.duration
 
     })
 
@@ -223,33 +224,47 @@ const updatethumbnail = asyncHandler(async (req, res) => {
 const deleteVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params
     //TODO: delete video
-    const isValidObjectId = mongoose.isValidObjectId(videoId)
-
-    if (!videoId || !isValidObjectId) {
-        throw new ApiError(404, "Video not found");
-
+    if (!isValidObjectId(videoId)) {
+        throw new ApiError(400, "Invalid video id");
     }
-    const video = await Video.findById(videoId)
-
+    const video = await Video.findById(videoId);
     if (!video) {
         throw new ApiError(404, "Video not found");
-
     }
+    
 
-    const deleteVideoInDB = await Video.deleteOne(videoId)
-    console.log(deleteVideoInDB); // check
-    if (!deleteVideoInDB) {
-        throw new ApiError(500, "Something went wrong while deleting in db");
+  const videoPublicId = video.videoPublicId || video.public_id || video.publicId;
+  const thumbnailPublicId = video.thumbnailPublicId || video.thumbnailPublic_id || video.thumbnailPublicId
 
-    }
+    // 4. delete assets from Cloudinary (do thumbnail + video in parallel if both exist)
+  const cloudinaryDeletes = [];
 
+  if (videoPublicId) {
+    cloudinaryDeletes.push(await deleteCloudinary(videoPublicId));
+  }
 
-    const deleteVideoInCloudinary = await deleteCloudinary(video.videoPublicId)
-    const deleteThumbnailInCloudinary = await deleteCloudinary(video.thumbnailPublicId)
+  if (thumbnailPublicId) {
+    cloudinaryDeletes.push(await deleteCloudinary(thumbnailPublicId));
+  }
 
-    if (!deleteVideoInCloudinary || !deleteThumbnailInCloudinary) {
-        throw new ApiError(500, "Something went wrong while deleting in cloudinary");
-    }
+  const deleteResults = await Promise.allSettled(cloudinaryDeletes);
+
+    const failedDeletes = deleteResults.filter(r => r.status === "rejected" || (r.status === "fulfilled" && !r.value));
+
+  if (failedDeletes.length > 0) {
+    // Decide: either abort DB delete or log and continue.
+    // Here we abort and return 500 so admin can investigate.
+    console.error("Cloudinary deletion failures:", deleteResults);
+    throw new ApiError(500, "Failed to delete files from Cloudinary");
+  }
+
+   const dbDeleteResult = await Video.deleteOne({ _id: videoId });
+
+   
+   if (dbDeleteResult.deletedCount === 0) {
+    // This is unlikely because we fetched the video earlier, but check anyway
+     throw new ApiError(500, "Failed to delete video record from database");
+   }
 
     return res
         .status(200)
@@ -280,15 +295,16 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
     } else {
         video.isPublished = false
     }
-    const videoPublished = video.isPublished
+    const updatedVideo = await video.save({validateBeforeSave:false})
     return res.status(200)
         .json(new ApiResponse(
             200,
-            { videoPublished },
+            { updatedVideo },
             "Video publish toggled successfully"
         ))
 
 })
+
 
 
 export {

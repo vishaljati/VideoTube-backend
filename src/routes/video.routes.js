@@ -39,6 +39,6 @@ router.route("/:videoId")
         .patch(upload.single("thumbnail"),updatethumbnail)
 
 router.route("/toggle/publish/:videoId")
-        .patch(  togglePublishStatus )
+        .patch(togglePublishStatus)
 
 export default router;
