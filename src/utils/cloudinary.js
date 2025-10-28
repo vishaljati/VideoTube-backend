@@ -37,12 +37,9 @@ const uploadCloudinary = async function (localFilePath) {
 
 const deleteCloudinary= async function (public_id) {
     try {
-        const response = cloudinary.uploader.destroy(
-            public_id,
-            {
-                resource_type:"auto"
-            })
-            return response;
+        const response = cloudinary.uploader.destroy(public_id)
+
+        return response;
         
     } catch (error) {
         console.log("Error:: ",error);
