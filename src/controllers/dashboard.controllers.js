@@ -1,11 +1,11 @@
-import mongoose from "mongoose"
+import mongoose,{isValidObjectId} from "mongoose"
 import {Video} from "../models/videos.model.js"
 import {Subscription} from "../models/subscription.model.js"
 import {Like} from "../models/likes.model.js"
 import {ApiError} from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import {asyncHandler} from "../utils/asyncHandler.js"
-import { getUserSubscriber } from "../utils/userProfileDetails.js"
+
 
 
 const getChannelStats = asyncHandler(async (req, res) => {
@@ -24,18 +24,24 @@ const getChannelStats = asyncHandler(async (req, res) => {
     const totalViews = totalVideo.reduce((sum, video) => sum + video.views, 0);
 
     //total subscribers
+    const subscriberDocument = await Subscription.find(
+                                           {channel:user._id},
+                                           { subscriber : 1 }
+                            ) // return array of subscriber id
 
-    const totalSubscriber = getUserSubscriber(user.username)
-    if (!totalSubscriber) {
-        throw new ApiError(500,"Error in getUserSubscriber function ");
-        
-    }
-    const totalFollowed =getUserFollowed(user.username)
-    if (!totalFollowed) {
-        throw new ApiError(500,"Error in getUserFollowed function ");
-        
-    }
+               
+     if (!Array.isArray(subscriberDocument)) {
+             throw new ApiError(500,"Server error while fetching subscriber"); 
+        }
+ 
+    const totalSubscriber =  subscriberDocument.length
 
+    //total followed
+    const followedChannel = await Subscription.find({subscriber:user._id}, {channel:1})
+    if (!Array.isArray(followedChannel)) {
+             throw new ApiError(500,"Server error while fetching followed channel"); 
+        }
+    const totalFollowed = followedChannel.length
     //total likes
     const totalLikeDocument = await Like.find({likedBy:user._id})
     if (!Array.isArray(totalLikeDocument)) {

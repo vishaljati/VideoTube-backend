@@ -44,10 +44,11 @@ try {
                                            {channel:channelId},
                                            { subscriber : 1 }
                             ) // return array of subscriber id
-    
+            
         if (!Array.isArray(subscriberDocument)) {
              throw new ApiError(500,"Server error while fetching subscriber"); 
         }
+ 
         const subscriberCount = subscriberDocument.length
     
         if (subscriberCount===0) {
