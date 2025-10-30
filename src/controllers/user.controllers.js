@@ -6,6 +6,7 @@ import { uploadCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import { sendRegistrationMail } from "../utils/sendMail.js"
 
 
 const generateAccessAndRefreshTokens = async (userId) => {
@@ -102,7 +103,9 @@ const registerUser = asyncHandler(async (req, res) => {
     if (!createdUser) {
         throw new ApiError(500, "Something went wrong while registering user");
 
-    }
+    } 
+    // sending reg. mail
+     await sendRegistrationMail(createdUser.email ,createdUser.fullName)
 
     // Sending response to frontend
 
