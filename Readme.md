@@ -1,6 +1,6 @@
 <!-- PROJECT LOGO & BANNER -->
 <p align="center">
-  <img src="https://raw.githubusercontent.com/your-username/videotube-backend/main/assets/banner.png" alt="VideoTube Banner" width="100%" />
+  <img src="assets/videotubebanner.png" alt="VideoTube Banner" width="100%" />
 </p>
 
 <h1 align="center">🎬 VideoTube - YouTube Clone (Backend)</h1>
