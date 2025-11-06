@@ -106,7 +106,8 @@ Learning Backend Development 🚀
 🌐 GitHub:[vishaljati](https://github.com/vishaljati)
 
 ## 📝 License
-```This project is for learning and educational purposes only.Feel free to fork and experiment!
+```
+This project is for learning and educational purposes only.Feel free to fork and experiment!
 
 
  
