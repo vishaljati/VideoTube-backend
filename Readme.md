@@ -1,9 +1,25 @@
-# 🎬 VideoTube - YouTube Clone (Backend)
+<!-- PROJECT LOGO & BANNER -->
+<p align="center">
+  <img src="https://raw.githubusercontent.com/your-username/videotube-backend/main/assets/banner.png" alt="VideoTube Banner" width="100%" />
+</p>
 
-A complete **backend learning project** built while following **Hitesh Choudhary Sir’s Chai aur Code YouTube Series**.  
-This project focuses on mastering **backend development with Node.js, Express, MongoDB, and authentication systems**, by building a fully functional YouTube-like backend called **VideoTube**.
+<h1 align="center">🎬 VideoTube - YouTube Clone (Backend)</h1>
+
+<p align="center">
+  <i>Learning backend development by building a YouTube Clone (VideoTube) from the Chai aur Code channel by Hitesh Choudhary Sir ☕</i>
+</p>
 
 ---
+
+## 🏷️ Badges
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Node.js-18.x-green?logo=node.js" alt="Node.js Badge" />
+  <img src="https://img.shields.io/badge/Express.js-Backend-lightgrey?logo=express" alt="Express.js Badge" />
+  <img src="https://img.shields.io/badge/MongoDB-Database-green?logo=mongodb" alt="MongoDB Badge" />
+  <img src="https://img.shields.io/badge/JWT-Authentication-blue?logo=jsonwebtokens" alt="JWT Badge" />
+  <img src="https://img.shields.io/badge/Status-Learning-yellow" alt="Learning Badge" />
+</p>
 
 ## 🚀 Project Overview
 
@@ -90,7 +106,7 @@ Learning Backend Development 🚀
 🌐 GitHub:[vishaljati](https://github.com/vishaljati)
 
 ## 📝 License
-    ```bash
+    ```
     This project is for learning and educational purposes only.
     Feel free to fork and experiment!
    ```
