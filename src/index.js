@@ -11,7 +11,7 @@ app.get("/", (req, res) => {
 });
 
 // DB connection & starting server
-const port = process.env.PORT||8000
+const port = process.env.PORT||3000
 connectDB()
   .then(() => {
      app.listen(port, (err) => {
