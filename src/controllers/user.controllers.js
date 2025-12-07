@@ -558,7 +558,26 @@ const getUserChannelProfile = asyncHandler(async (req,res) => {
 
  })
 
+const getUserById= asyncHandler (async (req,res) => {
+    const { userId }= req.body
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+        throw new ApiError(400,"UserId is invalid");    
+    }
 
+    const user = await User.findById(userId).select(
+        "-password -refreshTokens"
+    )   
+    if (!user) {
+        throw new ApiError(404,"User not found");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(
+            200, user, 
+            "User fetched successfully"
+        )
+    )
+})
 
 export {
     registerUser,
@@ -572,4 +591,5 @@ export {
     updateUserCoverImage,
     getUserChannelProfile,
     getWatchHistory,
+    getUserById
 }

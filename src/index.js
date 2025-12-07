@@ -5,6 +5,8 @@ dotenv.config({
 import { connectDB } from "./db/index.js";
 import { app } from "./app.js"
 
+
+
 //SENDING DEMO Response
 app.get("/", (req, res) => {
   res.send(`<h1>Server is running successfully on ${process.env.PORT}</h1>`);

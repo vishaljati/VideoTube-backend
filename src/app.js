@@ -1,6 +1,7 @@
 import express from "express"
 import cookieParser from "cookie-parser"
 import cors from "cors"
+import { auth } from 'express-openid-connect';
 
 const app = express ()
 
@@ -10,6 +11,26 @@ app.use(express.json({limit:"16kb"}))
 app.use(express.urlencoded({extended:true , limit:"16kb"}))
 app.use(express.static("public"))
 app.use(cookieParser())
+
+
+
+const config = {
+  authRequired: false,
+  auth0Logout: true,
+  secret: process.env.OAUTH_SECRET,
+  baseURL: 'http://localhost:3000',
+  clientID: process.env.OAUTH_CLIENT_ID,
+  issuerBaseURL: 'https://dev-55vsev2osimncfrf.jp.auth0.com'
+};
+
+// auth router attaches /login, /logout, and /callback routes to the baseURL
+ app.use(auth(config));
+
+// req.isAuthenticated is provided from the auth router
+ app.get('/', (req, res) => {
+  res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
+});
+
 
 //routes import 
 import healthRouter from "./routes/healthcheck.routes.js"

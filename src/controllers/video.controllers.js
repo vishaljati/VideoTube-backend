@@ -10,52 +10,23 @@ import { uploadCloudinary, deleteCloudinary } from "../utils/cloudinary.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
     // get all video based on query , sortby ,sortType , pagination
+   // TODO: pagination, sorting, filtering
+   try {
+    const videos = await Video.find({}).sort({ createdAt: -1 });
 
-    const { page = 1, limit = 10, query, sortby, sortType = "desc", userId } = req.query;
+    return res.status(200).json({
+      success: true,
+      count: videos.length,
+      videos,
+    });
 
-    const pageNum = Math.max(1, parseInt(page, 10) || 1);
-    const limitNum = Math.max(1, Math.min(100, parseInt(limit, 10) || 10)); // cap limit to 100
-
-    // build filter
-    const filter = { isPublished: true }; // return only published videos by default
-
-    if (query && String(query).trim().length) {
-        const q = String(query).trim();
-        filter.$or = [
-            { title: { $regex: q, $options: "i" } },
-            { description: { $regex: q, $options: "i" } }
-        ];
-    }
-
-    if (userId) {
-        if (!mongoose.isValidObjectId(userId)) {
-            throw new ApiError(400, "Invalid userId");
-        }
-        filter.creator = userId; // adjust field name if your model uses a different key
-    }
-
-    // build sort
-    const dir = String(sortType).toLowerCase() === "asc" ? 1 : -1;
-    const allowedSortFields = ["createdAt", "views", "title", "likes"];
-    const sortField = allowedSortFields.includes(sortby) ? sortby : "createdAt";
-    const sort = { [sortField]: dir };
-
-    const total = await Video.countDocuments(filter);
-    const totalPages = Math.max(1, Math.ceil(total / limitNum));
-    const skip = (pageNum - 1) * limitNum;
-
-    const videos = await Video.find(filter)
-        .sort(sort)
-        .skip(skip)
-        .limit(limitNum)
-        .select("-videoFile -thumbnail"); // exclude heavy fields; adjust as needed
-
-    return res.status(200)
-        .json(new ApiResponse(
-            200,
-            { videos, pagination: { total, page: pageNum, limit: limitNum, totalPages } },
-            "Videos fetched successfully"
-        ));
+  } catch (error) {
+    console.error("Error fetching videos:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error while fetching videos",
+    });
+  }
 });
 
 
